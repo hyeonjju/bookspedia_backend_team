@@ -1,0 +1,59 @@
+version: '3'
+services:
+
+  frontend:
+    depends_on:
+    - backend
+    ports:
+    - 9999:80
+    image: guswn1281/frontend:1.1
+#    다른 사람 이미지 사용할 때 아래와 같이 한다.
+#    image: ddarahakit2023/fe:1.0
+
+  backend:
+#    ports:
+#      - 8080:8080
+    image: guswn1281/backend:1.1
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SERVER-PORT: 8080
+      ACCESS_KEY: AKIAWIZKND46HCDZFPZV
+      BUCKET: practice-2023
+      DB_ADDR: 192.168.0.130
+      DB_DRIVER: com.mysql.cj.jdbc.Driver
+      DB_NAME: test
+      DB_PORT: 3306
+      DB_PW: qwer1234
+      DB_TYPE: mysql
+      DB_USER: root
+      EMAIL_HOST: smtp.gmail.com
+      EMAIL_ID: guswn7620
+      EMAIL_PORT: 587
+      EMAIL_PW: enjdpgyktxeefura
+      IMP_KEY: imp57521764
+      IMP_SECRET: EboLkWLsJNb8ucjTiTjM3RAIqvzucMTSGxByUp25eGhM7MGd7uW7X6VRb8TkvR6qVwTkNDj4ez5CU9bb
+      JWT_EXPIRED_TIME: 5000000
+      SECRET_KEY: rfIssnODej4jGGbaf5kNmcb/0sh7O1Cs2OWVCeUa
+      JWT: abcdefghijklmnopqrstuvwxyz0123456789
+
+  db:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+      - 33060:33060
+    volumes:
+      - db_vol:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: qwer1234
+      MYSQL_DATABASE: test
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost","-pqwer1234" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  db_vol:
+    driver: local
